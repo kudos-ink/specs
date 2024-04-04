@@ -1,0 +1,595 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "Kudos Core API"
+basePath: "/api"
+schemes:
+  - "http"
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+paths:
+
+  /users:
+    get:
+      summary: "Get all users"
+      parameters:
+        - in: query
+          name: userType
+          type: string
+          schema:
+            $ref: '#/components/schemas/UserType'
+          description: "Filter users by userType"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            type: object
+            properties:
+              users:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      summary: "Create/Update a new user from GitHub"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "user object to be added"
+          required: true
+          schema:
+            $ref: '#/components/schemas/UrlInput'
+      responses:
+        201:
+          description: "Successful operation"
+          schema:
+            $ref: '#/components/schemas/User'
+    patch:
+      summary: "Patch an user"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "user object to be patched"
+          required: true
+          schema:
+            $ref: '#/components/schemas/RepositoriesMaintainersInput'
+      responses:
+        200:
+          description: "Successful operation"
+
+  /users/{userId}:
+    get:
+      summary: "Get user by ID"
+      parameters:
+        - name: "userId"
+          in: "path"
+          description: "ID of user to return"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: '#/components/schemas/User'
+    delete:
+      summary: "Delete an user"
+      parameters:
+        - name: "userId"
+          in: "path"
+          description: "ID of user to delete"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        204:
+          description: "Successful operation"
+
+  /users/{userUrl}:
+    get:
+      summary: "Get user by URL"
+      parameters:
+        - name: "userUrl"
+          in: "path"
+          description: "URL of user to return"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: '#/components/schemas/User'
+  /organizations:
+    get:
+      summary: "Get all organizations"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            type: object
+            properties:
+              organizations:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Organization'
+    post:
+      summary: "Create/Update a new organization from GitHub"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "user object to be added"
+          required: true
+          schema:
+            $ref: '#/components/schemas/UrlInput'
+      responses:
+        201:
+          description: "Successful operation"
+          schema:
+            $ref: '#/components/schemas/Organization'
+
+  /organizations/{organizationId}:
+    get:
+      summary: "Get organization by ID"
+      parameters:
+        - name: "organizationId"
+          in: "path"
+          description: "ID of organization to return"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: '#/components/schemas/Organization'
+    delete:
+      summary: "Delete an organization"
+      parameters:
+        - name: "organizationId"
+          in: "path"
+          description: "ID of organization to delete"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        200:
+          description: "Successful operation"
+
+  /organizations/{organizationUrl}:
+    get:
+      summary: "Get organization by URL"
+      parameters:
+        - name: "organizationUrl"
+          in: "path"
+          description: "URL of organization to return"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: '#/components/schemas/Organization'
+  /repositories:
+    get:
+      summary: "Get all repositories"
+      parameters:
+        - in: query
+          name: organization_id
+          type: integer
+          description: "Filter users by organization id"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            type: object
+            properties:
+              repositories:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Repository'
+    post:
+      summary: "Create/Update a new repository from GitHub"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "user object to be added"
+          required: true
+          schema:
+            $ref: '#/components/schemas/UrlInput'
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: '#/components/schemas/Repository'
+
+  /repositories/{repositoryId}:
+    get:
+      summary: "Get repository by ID"
+      parameters:
+        - name: "repositoryId"
+          in: "path"
+          description: "ID of repository to return"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: '#/components/schemas/Repository'
+
+    delete:
+      summary: "Delete a repository"
+      parameters:
+        - name: "repositoryId"
+          in: "path"
+          description: "ID of repository to delete"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        200:
+          description: "Successful operation"
+
+
+  /repositories/{repositoryUrl}:
+    get:
+      summary: "Get repository by URL"
+      parameters:
+        - name: "repositoryUrl"
+          in: "path"
+          description: "URL of repository to return"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: '#/components/schemas/Repository'
+  /issues:
+    get:
+      summary: "Get all the issues"
+      parameters:
+        - in: query
+          name: organization_id
+          type: integer
+          description: "Filter users by organization id"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            type: object
+            properties:
+              issues:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Issue'
+    post:
+      summary: "Create a new issue"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Issue to be added"
+          required: true
+          schema:
+            $ref: '#/components/schemas/UrlInput'
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: '#/components/schemas/Issue'
+
+  /issues/{issueId}:
+    get:
+      summary: "Get issue by ID"
+      parameters:
+        - name: "issueId"
+          in: "path"
+          description: "ID of issue to return"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: '#/components/schemas/Issue'
+    delete:
+      summary: "Delete an Issue"
+      parameters:
+        - name: "issueId"
+          in: "path"
+          description: "ID of issue to delete"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        200:
+          description: "Successful operation"
+
+  /issues/{issueUrl}:
+    get:
+      summary: "Get issue by URL"
+      parameters:
+        - name: "issueUrl"
+          in: "path"
+          description: "URL of issue to return"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: '#/components/schemas/Issue'
+
+  /filters:
+    get:
+      summary: Get all filters
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Filter'
+    post:
+      summary: Create a new filter
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Filter to be added"
+          required: true
+          schema:
+            $ref: '#/components/schemas/FilterInput'
+      responses:
+        '201':
+          description: Filter created successfully
+          schema:
+            $ref: '#/components/schemas/Filter'
+              
+  /filters/{id}:
+    get:
+      summary: Get a filter by ID
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "ID of filter to return"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        '200':
+          description: Filter details
+          schema:
+            $ref: '#/components/schemas/Filter'
+    put:
+      summary: Update a filter by ID
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Filter to be updated"
+          required: true
+          schema:
+            $ref: '#/components/schemas/FilterInput'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FilterInput'
+      responses:
+        '200':
+          description: Filter details
+          schema:
+            $ref: '#/components/schemas/Filter'
+    delete:
+      summary: "Delete an organization"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "ID of filter to delete"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        200:
+          description: "Successful operation"
+
+          
+components:
+  schemas:
+
+    FilterInput:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        emoji:
+          type: string
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/FilterInput'
+
+    Filter:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        emoji:
+          type: string
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/FilterValuesInput'
+
+    FilterValuesInput:
+      type: object
+      properties:
+        name:
+          type: string
+        emoji:
+          type: string
+
+    TipStatus:
+      type: string
+      enum: [set, paid, rejected]
+    TipType:
+      type: string
+      enum: [direct, gov]
+    IssueStatus:
+      type: string
+      enum: [open, closed]
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        issues:
+          type: array
+          items:
+            $ref: '#/components/schemas/Issue'
+        repositories:
+          type: array
+          items:
+            $ref: '#/components/schemas/Repository'
+    UserInput:
+      type: object
+      properties:
+        url:
+          type: string
+
+    Issue:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        issue_number:
+          type: integer
+        url:
+          type: string
+        status:
+          $ref: '#/components/schemas/IssueStatus'
+        repository_id:
+          type: integer
+          format: int64
+        user_id:
+          type: integer
+          format: int64
+        tip_id:
+          type: integer
+          format: int64
+        issue_created_at:
+          type: string
+          format: date-time
+        e_tag:
+          type: string
+
+    RepositoryInput:
+      type: object
+      properties:
+        url:
+          type: string
+        maintainers:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserInput'
+
+    UrlInput:
+      type: object
+      properties:
+        url:
+          type: string
+
+    Repository:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        url:
+          type: string
+        icon:
+          type: string
+        e_tag:
+          type: string
+        organization_id:
+          type: integer
+          format: int64
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        issues:
+          type: array
+          items:
+            $ref: '#/components/schemas/Issue'
+        maintainers:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+
+    Organization:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        icon:
+          type: string
+        description:
+          type: string
+        url:
+          type: string
+        email:
+          type: string
+        twitter:
+          type: string
+        e_tag:
+          type: string
+        is_verified:
+          type: boolean
+        public_repos:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        repositories:
+          type: array
+          items:
+            $ref: '#/components/schemas/Repository'
+    
+    RepositoriesMaintainersInput:
+      type: object
+      properties:
+        repositories:
+          type: array
+          items:
+            $ref: '#/components/schemas/UrlInput'
+    UserType:
+      type: string
+      enum: [contributor, maintainer, admin]

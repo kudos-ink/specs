@@ -1,0 +1,117 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "Sync API"
+basePath: "/api"
+schemes:
+  - "http"
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+paths:
+  /sync/repositories/:
+    post:
+      summary: "Sync repositories"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "JSON object with 'repositories' array of URLs"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              repositories:
+                type: "array"
+                items:
+                  $ref: '#/components/schemas/RepositoryInput'
+      responses:
+        200:
+          description: "No Content"
+          schema:
+            $ref: '#/components/schemas/Repository'
+
+  /sync/issues/:
+    post:
+      summary: "Sync issues"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "JSON object with 'issues' array of URLs"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              issues:
+                type: "array"
+                items:
+                  $ref: '#/components/schemas/IssueInput'
+      responses:
+        200:
+          description: "No Content"
+          schema:
+            $ref: '#/components/schemas/Issue'
+
+
+components:
+  schemas:
+    UrlInput:
+      type: object
+      properties:
+        url:
+          type: string
+    Repository:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        url:
+          type: string
+        e_tag:
+          type: string
+          
+        issues:
+          type: array
+          items:
+            $ref: '#/components/schemas/Issue'
+            
+    RepositoryInput:
+      type: object
+      properties:
+        url:
+          type: string
+        e_tag:
+          type: string
+    
+    IssueInput:
+      type: object
+      properties:
+        url:
+          type: string
+        e_tag:
+          type: string
+
+    Issue:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        issue_number:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        url:
+          type: string
+        status:
+          $ref: '#/components/schemas/IssueStatus'
+        e_tag:
+          type: string
+          
+          
+    IssueStatus:
+      type: string
+      enum: [open, closed]
