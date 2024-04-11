@@ -24,12 +24,12 @@ paths:
               repositories:
                 type: "array"
                 items:
-                  $ref: '#/components/schemas/RepositoryInput'
+                  $ref: "#/components/schemas/RepositoryInput"
       responses:
         200:
-          description: "No Content"
+          description: "OK"
           schema:
-            $ref: '#/components/schemas/Repository'
+            $ref: "#/components/schemas/Repository"
 
   /sync/issues/:
     post:
@@ -45,13 +45,32 @@ paths:
               issues:
                 type: "array"
                 items:
-                  $ref: '#/components/schemas/IssueInput'
+                  $ref: "#/components/schemas/IssueInput"
       responses:
         200:
-          description: "No Content"
+          description: "OK"
           schema:
-            $ref: '#/components/schemas/Issue'
-
+            $ref: "#/components/schemas/Issue"
+  /sync/wishes/:
+    post:
+      summary: "Sync wishes"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "JSON object with 'issues' array of URLs"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              issues:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/IssueInput"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/components/schemas/Issue"
 
 components:
   schemas:
@@ -70,12 +89,12 @@ components:
           type: string
         e_tag:
           type: string
-          
+
         issues:
           type: array
           items:
-            $ref: '#/components/schemas/Issue'
-            
+            $ref: "#/components/schemas/Issue"
+
     RepositoryInput:
       type: object
       properties:
@@ -83,7 +102,7 @@ components:
           type: string
         e_tag:
           type: string
-    
+
     IssueInput:
       type: object
       properties:
@@ -107,11 +126,26 @@ components:
         url:
           type: string
         status:
-          $ref: '#/components/schemas/IssueStatus'
+          $ref: "#/components/schemas/IssueStatus"
         e_tag:
           type: string
-          
-          
+    Wish:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        issue_number:
+          type: integer
+        positive_votes:
+          type: integer
+        negative_votes:
+          type: integer
+        comment:
+          type: string
+        e_tag:
+          type: string
+
     IssueStatus:
       type: string
       enum: [open, closed]

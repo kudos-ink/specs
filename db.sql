@@ -85,6 +85,7 @@ CREATE TABLE IF NOT EXISTS issues (
     title VARCHAR(255),
     description VARCHAR(255),
     status issue_status NOT NULL,
+    has_wishes boolean,
     repository_id INT REFERENCES repositories(id) NOT NULL,
     user_id INT REFERENCES users(id) NULL,
     tip_id INT REFERENCES tips(id) NULL,
@@ -150,6 +151,24 @@ CREATE TABLE IF NOT EXISTS filter_values (
     filters_id INT REFERENCES filters(id) NOT NULL,
     emoji TEXT NOT NULL,
     name VARCHAR(255) UNIQUE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT (now() AT TIME ZONE 'utc'),
+    updated_at TIMESTAMP NULL
+);
+-- wishes are special issues where comments are fetched
+CREATE TABLE IF NOT EXISTS wishes (
+    id SERIAL PRIMARY KEY,
+    issues_id INT REFERENCES issues(id) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT (now() AT TIME ZONE 'utc'),
+    updated_at TIMESTAMP NULL
+);
+-- each wish has multiple comments
+CREATE TABLE IF NOT EXISTS comments (
+    id SERIAL PRIMARY KEY,
+    wishes_id INT REFERENCES wishes(id) NOT NULL,
+    users_id INT REFERENCES users(id) NOT NULL,
+    comment VARCHAR(255) UNIQUE,
+    positive_votes INT,
+    negative_votes INT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT (now() AT TIME ZONE 'utc'),
     updated_at TIMESTAMP NULL
 );
